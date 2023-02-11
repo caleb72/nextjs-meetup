@@ -4,17 +4,14 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const data = req.body;
 
-    const uri = `mongodb+srv://nextjs-test:wieaMYalQ18LjGRE@cluster0.ivzgij7.mongodb.net/meetups?retryWrites=true&w=majority`;
+    const uri = `https://vicroads-assistant.firebaseio.com/meetups.json`;
 
-    const client = await MongoClient.connect(uri);
-    const db = client.db();
-
-    const meetupsCollection = db.collection('meetups');
-
-    const result = await meetupsCollection.insertOne(data);
-    console.log(result);
-
-    client.close();
+    const response = await fetch(uri, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'applications/json' },
+    });
+    console.log(response);
 
     res.status(201).json({ message: 'Meetup inserted!' });
   }

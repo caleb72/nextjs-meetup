@@ -12,36 +12,36 @@ const MeetupDetailsPage = (props) => {
 };
 
 export const getStaticPaths = async () => {
+  const response = await fetch(
+    'https://vicroads-assistant.firebaseio.com/meetups.json'
+  );
+  const data = await response.json();
+
   return {
     fallback: false,
-    paths: [
-      {
+    paths: Object.keys(data).map((k) => {
+      return {
         params: {
-          meetupId: 'm1',
+          meetupId: k,
         },
-      },
-      {
-        params: {
-          meetupId: 'm2',
-        },
-      },
-    ],
+      };
+    }),
   };
 };
 
 export const getStaticProps = async (context) => {
   const meetupId = context.params.meetupId;
 
+  const response = await fetch(
+    `https://vicroads-assistant.firebaseio.com/meetups.json?orderBy="$key"&equalTo="${meetupId}"`
+  );
+  const data = await response.json();
+
   return {
     props: {
-      meetupData: {
-        image:
-          'https://images.pexels.com/photos/3719037/pexels-photo-3719037.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        title: 'A First Meetup',
-        address: 'Some address 5, 12345 Some City',
-        description: 'This is a first meetup',
-      },
+      meetupData: { id: meetupId, ...data[meetupId] },
     },
+    revalidate: 10,
   };
 };
 
