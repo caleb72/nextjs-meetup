@@ -29,8 +29,6 @@ export const getStaticProps = async (request, params) => {
     };
   });
 
-  console.log(meetupData);
-
   return {
     props: {
       meetups: meetupData,
