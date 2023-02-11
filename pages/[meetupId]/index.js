@@ -18,7 +18,7 @@ export const getStaticPaths = async () => {
   const data = await response.json();
 
   return {
-    fallback: false,
+    fallback: 'blocking',
     paths: Object.keys(data).map((k) => {
       return {
         params: {
